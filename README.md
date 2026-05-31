@@ -74,7 +74,7 @@ Backend logic is kept separate from frontend rendering. Route functions in app.p
 | **2** | Preliminary research | Learn how Flask routing works and set up coding environment. | John <br> Jermaine | 16 May - 23 May |
 | | | Test pulling live stock data from the yfinance API | John | |
 | **3** | Database Initialization | Create the local SQLite database tables to store user profiles. | Jermaine | 24 May - 28 May |
-| | | Code the database setup script to test saving and loading user data. | John | |
+| | | Code the database setup script to test saving and loading user data. | Jermaine | |
 | **4** | UI & Code Integration | Connect the live yfinance data to our styled HTML frontend pages. | John <br> Jermaine | 29 May - 31 May |
 | | | **Evaluation Milestone 1** <br> - Ideation <br> - Proof-of-concept: <br> &nbsp;&nbsp;&nbsp;&nbsp; - 1 hardcoded stock successfully pulling live market numbers. <br> &nbsp;&nbsp;&nbsp;&nbsp; - Local database file verifying it can save and load a test user profile. <br> &nbsp;&nbsp;&nbsp;&nbsp; - Clean web page showing our core design layouts and live price data | | **1 June** |
 | **5** | Dynamic Stock Search | Build a search bar that lets users look up any SGX or US stock ticker. | Jermaine | 2 June - 5 June |
