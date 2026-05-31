@@ -96,8 +96,6 @@ Backend logic is kept separate from frontend rendering. Route functions in app.p
 | | | Run final testing to catch and fix any bugs before the official deployment. | John <br> Jermaine | |
 | | | **Evaluation Milestone 3** <br> - Complete Minimum Viable Product (MVP) <br> - Final App Release: <br> &nbsp;&nbsp;&nbsp;&nbsp; - Working automated Financial Health Score (Low/Medium/High risk). <br> &nbsp;&nbsp;&nbsp;&nbsp; - Fully operational stock screener with advanced sorting filters. <br> &nbsp;&nbsp;&nbsp;&nbsp; - Watchlist export-to-CSV utility tool and finalized user interface. | | **27 July** |
 
-Project Log
-Full project log tracking tasks, dates and hours for each team member is maintained at: 
-Hours logged to date:
-John Luke Lim Kang: X hours
-Jermaine Khor: X hours
+# Project Log
+
+Refer to the attached spreadsheet: [Project Log](https://docs.google.com/spreadsheets/d/1mq5sMYC5nBjxlFzbSaTtVvULrHvseNUHyRrKQJG9MPM/edit?usp=sharing)
