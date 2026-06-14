@@ -58,3 +58,34 @@ def user_stock_profile(user_id, ticker):
 # first trial to run
 if __name__ == '__main__':
     finsight.run(debug=True)
+
+# hardcoding and testing a screener functionality \
+@finsight.route('/screener', methods=['GET', 'POST'])
+def screener():
+    # the hardcoded tickers will selected will be SG and US stocks for technology, finance, healthcare and energy
+    all_tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'JPM', 'JNJ', 'XOM', 'PFE', 'META', 'D05.SI', 'O39.SI', 'U11.SI', 'C6L.SI', 'Z74.SI', 'BN4.SI', 'A17U.SI', 'C38U.SI', 'S68U.SI', 'M44U.SI', 'G13U.SI']
+    selected_sector = request.form.get('sector', '') # fallback
+    selected_exchange = request.form.get('exchange', '') # fallback
+
+    results = []
+    for ticker in all_tickers:
+        stock = yf.Ticker(ticker)
+        info = stock.info
+        info_sector = info.get('sector', 'N/A')
+        info_currentPrice = info.get('currentPrice', 'N/A')
+        info_marketCap = info.get('marketCap', 'N/A')
+
+        if ticker.endswith('.SI'):
+            exchange = 'SGX'
+        else:
+            exchange = 'US'
+
+        if (selected_sector == '' or info_sector == selected_sector) and (selected_exchange == '' or exchange == selected_exchange):
+            results.append({
+                'ticker': ticker,
+                'sector': info_sector,
+                'exchange': exchange,
+                'currentPrice': info_currentPrice,
+                'marketCap': info_marketCap
+            })
+    return render_template('screener.html', results=results, selected_sector=selected_sector, selected_exchange=selected_exchange)
