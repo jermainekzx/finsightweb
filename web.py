@@ -10,6 +10,16 @@ finsight = Flask(__name__)
 def home():
     return "Finsight Ok"
 
+
+# basic barebones health score
+def health_score(de_ratio, current_ratio):
+    if de_ratio < 1 and current_ratio > 1.5:
+        return "LOW RISK"
+    elif de_ratio < 2 and current_ratio > 1:
+        return "MEDIUM RISK"
+    else:
+        return "HIGH RISK"
+
 @finsight.route('/user/<int:user_id>/stock/<ticker>')
 def user_stock_profile(user_id, ticker):
     username_from_db = load_user(user_id)
@@ -31,17 +41,19 @@ def user_stock_profile(user_id, ticker):
     week_high = stock_info.get('fiftyTwoWeekHigh', 'N/A')
     # weekly low
     week_low = stock_info.get('fiftyTwoWeekLow', 'N/A')
+    # debt to equity ratio
+    debt_to_equity = stock_info.get('debtToEquity', 'N/A')
+    # current ratio
+    current_ratio = stock_info.get('currentRatio', 'N/A')
 
-    return render_template('stock.html', ticker=ticker, price=pricedata, pe=pe_ratio, market_cap=market_cap, week_high=week_high, week_low=week_low)
+    if debt_to_equity != 'N/A' and current_ratio != 'N/A':
+        risk_assessment = health_score(debt_to_equity, current_ratio)
 
-# basic barebones health score
-def health_score(de_ratio, current_ratio):
-    if de_ratio < 1 and current_ratio > 1.5:
-        return "LOW RISK"
-    elif de_ratio < 2 and current_ratio > 1:
-        return "MEDIUM RISK"
     else:
-        return "HIGH RISK"
+        risk_assessment = "N/A"
+
+    return render_template('stock.html', ticker=ticker, price=pricedata, pe=pe_ratio, market_cap=market_cap, week_high=week_high, week_low=week_low, risk_assessment=risk_assessment)
+
         
 # first trial to run
 if __name__ == '__main__':
