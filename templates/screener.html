@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Finsight, stock finder</title>
+</head>
+<body>
+    <h1>Search for stocks</h1>
+
+    <form method="POST" action="/screener">
+    # filter stocks by sector and exchange
+
+    # picking a sector
+    <select name="sector">
+            <option value="">All Sectors</option>
+            <option value="Technology">Technology</option>
+            <option value="Financial Services">Financial Services</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Energy">Energy</option>
+        </select>
+
+    # picking an exchange
+    <select name="exchange">
+            <option value="">All Exchanges</option>
+            <option value="SGX">SGX</option>
+            <option value="US">US</option>
+        </select>
+
+         <button type="submit">Search</button>
+    </form>
+
+    <table>
+       <tr>
+            <th>Ticker</th>
+            <th>Sector</th>
+            <th>Exchange</th>
+            <th>Price</th>
+            <th>Mkt Cap</th>
+        </tr>
+        {% for stock in results %}
+        <tr>
+            <td>{{ stock.ticker }}</td>
+            <td>{{ stock.sector }}</td>
+            <td>{{ stock.exchange }}</td>
+            <td>{{ stock.currentPrice }}</td>
+            <td>{{ stock.marketCap }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>
