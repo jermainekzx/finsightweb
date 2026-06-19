@@ -7,6 +7,11 @@ def create_db():
               username text NOT NULL UNIQUE, 
               password text NOT NULL
               )""")
+    c.execute(""" CREATE TABLE IF NOT EXISTS watchlist(
+              id integer PRIMARY KEY AUTOINCREMENT,
+              user_id integer NOT NULL,
+              ticker text NOT NULL
+               )""")
     conn.commit()
     conn.close()
 
@@ -38,6 +43,22 @@ def load_user(user_id):
     else:
         print("User Profile Not Found")
 
+def add_to_watchlist(user_id, ticker):
+    conn = sqlite3.connect("userprofile.db")
+    c = conn.cursor()
+    c.execute(f"INSERT INTO watchlist (user_id, ticker) VALUES ({user_id}, '{ticker}')")
+    conn.commit()
+    print(f"Added {ticker} to user {user_id}'s watchlist!")
+    conn.close()
+
+def get_watchlist(user_id):
+    conn = sqlite3.connect("userprofile.db")
+    c = conn.cursor()
+    c.execute(f"SELECT ticker FROM watchlist WHERE user_id = {user_id}")
+    rows = c.fetchall()
+    conn.close()
+    
+    return [row[0] for row in rows]
+
 if __name__ == "__main__":
     create_db()
-    

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import yfinance as yf
 
-from init_db import save_user, load_user
+from init_db import save_user, load_user, add_to_watchlist, get_watchlist
 # setting up first attempt at the flask app
 finsight = Flask(__name__)
 
@@ -86,7 +86,16 @@ def screener():
             })
     return render_template('screener.html', results=results, selected_sector=selected_sector, selected_exchange=selected_exchange)
 
-        
+@finsight.route('/user/<int:user_id>/watchlist')
+def view_watchlist(user_id):
+    watchlist = get_watchlist(user_id)
+    return render_template('watchlist.html', user_id=user_id, watchlist=watchlist)
+
+@finsight.route('/user/<int:user_id>/watchlist/add/<ticker>', methods=['POST'])
+def add_stock(user_id, ticker):
+    add_to_watchlist(user_id, ticker)
+    return redirect(url_for('view_watchlist', user_id=user_id))
+    
 # first trial to run
 if __name__ == '__main__':
     finsight.run(debug=True)

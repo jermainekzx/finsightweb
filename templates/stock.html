@@ -13,5 +13,8 @@
     <p>52 Week High: {{ week_high }}</p>
     <p>52 Week Low: {{ week_low }}</p>
     <p>Risk Assessment: {{ risk_assessment }}</p>
+    <form method="POST" action="/user/{{ user_id }}/watchlist/add/{{ ticker }}">
+    <button type="submit">Add to Watchlist</button>
+    </form>
 </body>
 </html>
