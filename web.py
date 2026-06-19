@@ -54,10 +54,6 @@ def user_stock_profile(user_id, ticker):
 
     return render_template('stock.html', ticker=ticker, price=pricedata, pe=pe_ratio, market_cap=market_cap, week_high=week_high, week_low=week_low, risk_assessment=risk_assessment)
 
-        
-# first trial to run
-if __name__ == '__main__':
-    finsight.run(debug=True)
 
 # hardcoding and testing a screener functionality \
 @finsight.route('/screener', methods=['GET', 'POST'])
@@ -89,3 +85,8 @@ def screener():
                 'marketCap': info_marketCap
             })
     return render_template('screener.html', results=results, selected_sector=selected_sector, selected_exchange=selected_exchange)
+
+        
+# first trial to run
+if __name__ == '__main__':
+    finsight.run(debug=True)
