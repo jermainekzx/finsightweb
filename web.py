@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import yfinance as yf
+import bcrypt
 
 from init_db import save_user, load_user
 # setting up first attempt at the flask app
@@ -9,7 +10,6 @@ finsight = Flask(__name__)
 @finsight.route('/')
 def home():
     return "Finsight Ok"
-
 
 # basic barebones health score
 def health_score(de_ratio, current_ratio):
@@ -86,7 +86,15 @@ def screener():
             })
     return render_template('screener.html', results=results, selected_sector=selected_sector, selected_exchange=selected_exchange)
 
-        
+@finsight.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        save_user(username, password)
+        return redirect(url_for('home'))
+    return render_template('register.html')
+
 # first trial to run
 if __name__ == '__main__':
     finsight.run(debug=True)
