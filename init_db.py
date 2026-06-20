@@ -42,6 +42,18 @@ def load_user(user_id):
     else:
         print("User Profile Not Found")
 
+def get_password_hash(username):
+    conn = sqlite3.connect("userprofile.db")
+    c = conn.cursor()
+    c.execute("SELECT password FROM users WHERE username = ?", (username,))
+    row = c.fetchone()
+
+    conn.close()
+    
+    if row is not None:
+        return row[0]  
+    return None
+
 if __name__ == "__main__":
     create_db()
     

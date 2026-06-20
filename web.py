@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, session, url_for
 import yfinance as yf
 import bcrypt
 
-from init_db import save_user, load_user
+from init_db import save_user, load_user, get_password_hash
 # setting up first attempt at the flask app
 finsight = Flask(__name__)
 
@@ -95,6 +95,19 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html')
 
+@finsight.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        stored_hash = get_password_hash(username)
+        if stored_hash:
+            if bcrypt.checkpw(password.encode(), stored_hash.encode()):
+                print("Login successful!")
+                return redirect(url_for('home'))
+        return render_template('login.html', error="Invalid username or password")
+    return render_template('login.html')
+    
 # first trial to run
 if __name__ == '__main__':
     finsight.run(debug=True)
