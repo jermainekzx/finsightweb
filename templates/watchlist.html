@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FinSight - Watchlist</title>
+</head>
+<body>
+    <h1>Your saved stocks</h1>
+    <ul>
+        {% for ticker in watchlist %}
+        <li>
+            <a href="/user/{{ user_id }}/stock/{{ ticker }}">{{ ticker }}</a>
+        </li>
+        {# loop through saved tickers #}
+        {% endfor %}
+    </ul>
+</body>
+</html>
