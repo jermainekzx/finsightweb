@@ -27,9 +27,15 @@ def user_stock_profile(user_id, ticker):
         username_from_db = "Guest User"
     
     # fetching data ticker
+    ticker = ticker.upper()
     pulldata = yf.Ticker(ticker)
     # getting stock info
-    stock_info = pulldata.info
+    try:
+        stock_info = pulldata.info
+        if not stock_info or ('longName' not in stock_info and 'shortName' not in stock_info):
+            raise ValueError("Invalid ticker")
+    except Exception as e:
+        return f"Error: Invalid ticker '{ticker}'. {ticker} is not a valid stock ticker SGX or US stock symbol."
 
     # price data 
     pricedata = stock_info.get('currentPrice', 'N/A')
