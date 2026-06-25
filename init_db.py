@@ -60,5 +60,13 @@ def get_watchlist(user_id):
     
     return [row[0] for row in rows]
 
+def remove_from_watchlist(user_id, ticker):
+    conn = sqlite3.connect("userprofile.db")
+    c = conn.cursor()
+    c.execute(f"DELETE FROM watchlist WHERE user_id = {user_id} AND ticker = '{ticker}'")
+    conn.commit()
+    print(f"Removed {ticker} from user {user_id}'s watchlist!")
+    conn.close()
+
 if __name__ == "__main__":
     create_db()

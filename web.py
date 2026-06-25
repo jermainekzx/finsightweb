@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import yfinance as yf
 
-from init_db import save_user, load_user, add_to_watchlist, get_watchlist
+from init_db import save_user, load_user, add_to_watchlist, get_watchlist, remove_from_watchlist
 # setting up first attempt at the flask app
 finsight = Flask(__name__)
 
@@ -9,7 +9,6 @@ finsight = Flask(__name__)
 @finsight.route('/')
 def home():
     return "Finsight Ok"
-
 
 # basic barebones health score
 def health_score(de_ratio, current_ratio):
@@ -94,6 +93,12 @@ def view_watchlist(user_id):
 @finsight.route('/user/<int:user_id>/watchlist/add/<ticker>', methods=['POST'])
 def add_stock(user_id, ticker):
     add_to_watchlist(user_id, ticker)
+    return redirect(url_for('view_watchlist', user_id=user_id))
+
+# remove and edit the bottom part. DONT FORGET 
+@finsight.route('/user/<int:user_id>/watchlist/remove/<ticker>', methods=['POST'])
+def remove_stock(user_id, ticker):
+    remove_from_watchlist(user_id, ticker)
     return redirect(url_for('view_watchlist', user_id=user_id))
     
 # first trial to run
