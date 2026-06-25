@@ -1,4 +1,6 @@
 import sqlite3
+import bcrypt
+
 def create_db():
     conn = sqlite3.connect("userprofile.db")
     c = conn.cursor()
@@ -18,13 +20,15 @@ def create_db():
 def save_user(new_username, new_password):
     conn = sqlite3.connect("userprofile.db")
     c = conn.cursor()
-    c.execute(f"SELECT username FROM users WHERE username = '{new_username}'")
+    c.execute("SELECT username FROM users WHERE username = ?", (new_username,))
     existing_user = c.fetchone()
 
     if existing_user is not None:
         print("That username is already taken! Please choose another one")
     else:
-        c.execute(f"INSERT INTO users (username, password) VALUES ('{new_username}', '{new_password}')")
+        hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt(rounds=12))
+        stored_hashed_string = hashed_password.decode()
+        c.execute("""INSERT INTO users (username, password) VALUES (?, ?)""", (new_username, stored_hashed_string))
         conn.commit()
         print("Successfully saved new user data!")
 
@@ -33,7 +37,7 @@ def save_user(new_username, new_password):
 def load_user(user_id):
     conn = sqlite3.connect("userprofile.db")
     c = conn.cursor()
-    c.execute(f"SELECT username FROM users WHERE id = {user_id}")
+    c.execute("SELECT username FROM users WHERE id = ?", (user_id,))
     row = c.fetchone()
 
     conn.close()
@@ -43,10 +47,21 @@ def load_user(user_id):
     else:
         print("User Profile Not Found")
 
+def get_password_hash(username):
+    conn = sqlite3.connect("userprofile.db")
+    c = conn.cursor()
+    c.execute("SELECT password FROM users WHERE username = ?", (username,))
+    row = c.fetchone()
+    conn.close()
+    
+    if row is not None:
+        return row[0]  
+    return None
+
 def add_to_watchlist(user_id, ticker):
     conn = sqlite3.connect("userprofile.db")
     c = conn.cursor()
-    c.execute(f"INSERT INTO watchlist (user_id, ticker) VALUES ({user_id}, '{ticker}')")
+    c.execute("INSERT INTO watchlist (user_id, ticker) VALUES (?, ?)", (user_id, ticker))
     conn.commit()
     print(f"Added {ticker} to user {user_id}'s watchlist!")
     conn.close()
@@ -54,7 +69,7 @@ def add_to_watchlist(user_id, ticker):
 def get_watchlist(user_id):
     conn = sqlite3.connect("userprofile.db")
     c = conn.cursor()
-    c.execute(f"SELECT ticker FROM watchlist WHERE user_id = {user_id}")
+    c.execute("SELECT ticker FROM watchlist WHERE user_id = ?", (user_id,))
     rows = c.fetchall()
     conn.close()
     
@@ -63,7 +78,7 @@ def get_watchlist(user_id):
 def remove_from_watchlist(user_id, ticker):
     conn = sqlite3.connect("userprofile.db")
     c = conn.cursor()
-    c.execute(f"DELETE FROM watchlist WHERE user_id = {user_id} AND ticker = '{ticker}'")
+    c.execute("DELETE FROM watchlist WHERE user_id = ? AND ticker = ?", (user_id, ticker))
     conn.commit()
     print(f"Removed {ticker} from user {user_id}'s watchlist!")
     conn.close()
