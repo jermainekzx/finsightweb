@@ -9,7 +9,7 @@ finsight = Flask(__name__)
 # home page, to check if the app is working
 @finsight.route('/')
 def home():
-    return "Finsight Ok"
+    return render_template('home.html')
 
 # basic barebones health score
 def health_score(de_ratio, current_ratio):
@@ -107,7 +107,15 @@ def login():
                 return redirect(url_for('home'))
         return render_template('login.html', error="Invalid username or password")
     return render_template('login.html')
-    
+
+@finsight.route('/search', methods=['GET','POST'])  
+def search():
+    if request.method == 'POST':
+        ticker = request.form.get('ticker', '').strip().upper()
+        if ticker:
+            return redirect(url_for('user_stock_profile', user_id=1, ticker=ticker))
+    return render_template('search.html')  
+
 # first trial to run
 if __name__ == '__main__':
     finsight.run(debug=True)
