@@ -48,7 +48,11 @@ def user_stock_profile(user_id, ticker):
     else:
         risk_assessment = "N/A"
 
-    return render_template('stock.html', ticker=ticker, price=pricedata, pe=pe_ratio, market_cap=market_cap, week_high=week_high, week_low=week_low, risk_assessment=risk_assessment)
+    hist = pulldata.history(period="1mo")
+    chart_dates = [str(d.date()) for d in hist.index]
+    chart_prices = [round(float(p), 2) for p in hist['Close']]
+
+    return render_template('stock.html', ticker=ticker, price=pricedata, pe=pe_ratio, market_cap=market_cap, week_high=week_high, week_low=week_low, risk_assessment=risk_assessment, user_id=user_id, user_name=username_from_db, chart_dates=chart_dates, chart_prices=chart_prices)
 
 
 @finsight.route('/screener', methods=['GET', 'POST'])

@@ -13,8 +13,32 @@
     <p>52 Week High: {{ week_high }}</p>
     <p>52 Week Low: {{ week_low }}</p>
     <p>Risk Assessment: {{ risk_assessment }}</p>
-    <form method="POST" action="/user/{{ user_id }}/watchlist/add/{{ ticker }}">
+    <form method="POST" action="/user/{{ user_id }}/watchlist/add">
     <button type="submit">Add to Watchlist</button>
     </form>
+
+    <h2>1 Month Price Chart</h2>
+    <canvas id="priceChart" width="750" height="350"></canvas>
+
+    <!-- chart.js renders the closing price data from flask as a line graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const dates = {{ chart_dates | tojson }};
+        const prices = {{ chart_prices | tojson }};
+
+        const ctx = document.getElementById('priceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: '{{ ticker }} Closing Price',
+                    data: prices,
+                    borderColor: '#e63946',
+                    fill: false
+                }]
+            }
+        });
+    </script>
 </body>
 </html>
