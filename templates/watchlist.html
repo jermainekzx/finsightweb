@@ -9,9 +9,16 @@
         {% for ticker in watchlist %}
         <li>
             <a href="/user/{{ user_id }}/stock/{{ ticker }}">{{ ticker }}</a>
+            <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ ticker }}" style="display:inline;">
+                <button type="submit">Remove</button>
+            </form>
         </li>
         {# loop through saved tickers #}
         {% endfor %}
     </ul>
+    <form method="post" action="/user/{{ user_id }}/watchlist/add">
+        <input type="text" name="ticker" placeholder="Enter ticker symbol" required>
+        <button type="submit">Add to Watchlist</button>
+    </form>
 </body>
 </html>

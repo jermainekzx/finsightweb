@@ -116,9 +116,11 @@ def view_watchlist(user_id):
     watchlist = get_watchlist(user_id)
     return render_template('watchlist.html', user_id=user_id, watchlist=watchlist)
 
-@finsight.route('/user/<int:user_id>/watchlist/add/<ticker>', methods=['POST'])
-def add_stock(user_id, ticker):
-    add_to_watchlist(user_id, ticker)
+@finsight.route('/user/<int:user_id>/watchlist/add', methods=['POST'])
+def add_stock(user_id):
+    ticker = request.form.get('ticker', '').strip().upper()
+    if ticker:
+        add_to_watchlist(user_id, ticker)
     return redirect(url_for('view_watchlist', user_id=user_id))
 
 @finsight.route('/user/<int:user_id>/watchlist/remove/<ticker>', methods=['POST'])
