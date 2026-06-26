@@ -141,6 +141,12 @@ def remove_stock(user_id, ticker):
     remove_from_watchlist(user_id, ticker)
     return redirect(url_for('view_watchlist', user_id=user_id))
 
+@finsight.route('/logout')
+def logout():
+    session.clear() 
+    print("User logged out successfully.")
+    return redirect(url_for('home'))
+
 # first trial to run
 if __name__ == '__main__':
     finsight.run(debug=True)

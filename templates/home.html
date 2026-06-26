@@ -4,6 +4,16 @@
     <title>Home | FinSight</title>
 </head>
 <body>
+    <nav>
+        <a href="/screener">Screener</a> |
+        {% if session.get('user_id') %}
+            <a href="/user/{{ session['user_id'] }}/watchlist">My Watchlist</a> | 
+            <a href="/logout">Log Out</a>
+        {% else %}
+            <a href="/login">Login</a> | 
+            <a href="/register">Register</a>
+        {% endif %}
+    </nav>
     <h1>Welcome to FinSight</h1>
     
     <h2>Search for a Stock Symbol</h2>

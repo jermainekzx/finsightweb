@@ -4,6 +4,13 @@
     <title>{{ ticker }} Stock Information</title>
 </head>
 <body>
+    <nav>
+        <a href="/">Home</a> | 
+        <a href="/search">Search Stocks</a> | 
+        <a href="/user/{{ user_id }}/watchlist">My Watchlist</a> | 
+        <a href="/screener">Screener</a> | 
+        <a href="/logout">Log Out</a>
+    </nav>
     Logged in as: <strong>{{ user_name }}</strong>
     <hr>
     <h1>{{ ticker }} Stock Information</h1>
