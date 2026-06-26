@@ -14,10 +14,18 @@
     <p>52 Week Low: {{ week_low }}</p>
     <p>Risk Assessment: {{ risk_assessment }}</p>
     <form method="POST" action="/user/{{ user_id }}/watchlist/add">
-    <button type="submit">Add to Watchlist</button>
+        <input type="hidden" name="ticker" value="{{ ticker }}">
+        <button type="submit">Add to Watchlist</button>
     </form>
 
-    <h2>1 Month Price Chart</h2>
+    <h2>Historical Price Chart ({{ chosen_period }})</h2>
+    <div>
+        <strong>Change Range:</strong>
+        <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=1mo">1 Month</a> | 
+        <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=3mo">3 Months</a> | 
+        <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=1y">1 Year</a>
+    </div>
+
     <canvas id="priceChart" width="750" height="350"></canvas>
 
     <!-- chart.js renders the closing price data from flask as a line graph -->

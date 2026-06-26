@@ -34,6 +34,17 @@ def save_user(new_username, new_password):
 
     conn.close()
 
+def get_user_id(username):
+    conn = sqlite3.connect("userprofile.db")
+    c = conn.cursor()
+    c.execute("SELECT id FROM users WHERE username = ?", (username,))
+    row = c.fetchone()
+    conn.close()
+    
+    if row is not None:
+        return row[0]
+    return 1 
+
 def load_user(user_id):
     conn = sqlite3.connect("userprofile.db")
     c = conn.cursor()

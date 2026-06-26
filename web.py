@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, session, url_for
 import yfinance as yf
 import bcrypt
 
-from init_db import save_user, load_user, get_password_hash, add_to_watchlist, get_watchlist, remove_from_watchlist
+from init_db import save_user, load_user, get_password_hash, add_to_watchlist, get_watchlist, remove_from_watchlist, get_user_id
 # setting up first attempt at the flask app
 finsight = Flask(__name__)
+finsight.secret_key = 'finsight_secret_key' 
 
 # home page, to check if the app is working
 @finsight.route('/')
@@ -47,8 +48,12 @@ def user_stock_profile(user_id, ticker):
         risk_assessment = health_score(debt_to_equity, current_ratio)
     else:
         risk_assessment = "N/A"
+    
+    chosen_period = request.args.get('period', '1mo')
+    if chosen_period not in ['1mo', '3mo', '1y']:
+        chosen_period = '1mo'
 
-    hist = pulldata.history(period="1mo")
+    hist = pulldata.history(period=chosen_period)
     chart_dates = [str(d.date()) for d in hist.index]
     chart_prices = [round(float(p), 2) for p in hist['Close']]
 
@@ -100,10 +105,13 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         stored_hash = get_password_hash(username)
-        if stored_hash:
-            if bcrypt.checkpw(password.encode(), stored_hash.encode()):
+        if stored_hash and bcrypt.checkpw(password.encode(), stored_hash.encode()):
+                user_id = get_user_id(username)
+                session['user_id'] = user_id
+                session['username'] = username
+
                 print("Login successful!")
-                return redirect(url_for('home'))
+                return redirect(url_for('view_watchlist', user_id=user_id))
         return render_template('login.html', error="Invalid username or password")
     return render_template('login.html')
 
@@ -112,7 +120,8 @@ def search():
     if request.method == 'POST':
         ticker = request.form.get('ticker', '').strip().upper()
         if ticker:
-            return redirect(url_for('user_stock_profile', user_id=1, ticker=ticker))
+            active_user_id = session.get('user_id', 1) 
+            return redirect(url_for('user_stock_profile', user_id=active_user_id, ticker=ticker))
     return render_template('search.html')
 
 @finsight.route('/user/<int:user_id>/watchlist')
