@@ -120,7 +120,7 @@ def search():
     if request.method == 'POST':
         ticker = request.form.get('ticker', '').strip().upper()
         if ticker:
-            active_user_id = session.get('user_id', 1) 
+            active_user_id = session.get('user_id', 0) 
             return redirect(url_for('user_stock_profile', user_id=active_user_id, ticker=ticker))
     return render_template('search.html')
 
@@ -146,6 +146,7 @@ def logout():
     session.clear() 
     print("User logged out successfully.")
     return redirect(url_for('home'))
+
 
 # first trial to run
 if __name__ == '__main__':
