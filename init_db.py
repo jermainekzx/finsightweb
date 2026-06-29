@@ -1,8 +1,10 @@
 import sqlite3
 import bcrypt
 
+DB_NAME = "userprofile.db"
+
 def create_db():
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute(""" CREATE TABLE IF NOT EXISTS users(
               id integer PRIMARY KEY AUTOINCREMENT, 
@@ -18,7 +20,7 @@ def create_db():
     conn.close()
 
 def save_user(new_username, new_password):
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("SELECT username FROM users WHERE username = ?", (new_username,))
     existing_user = c.fetchone()
@@ -35,7 +37,7 @@ def save_user(new_username, new_password):
     conn.close()
 
 def get_user_id(username):
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("SELECT id FROM users WHERE username = ?", (username,))
     row = c.fetchone()
@@ -46,7 +48,7 @@ def get_user_id(username):
     return 1 
 
 def load_user(user_id):
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("SELECT username FROM users WHERE id = ?", (user_id,))
     row = c.fetchone()
@@ -59,7 +61,7 @@ def load_user(user_id):
         print("User Profile Not Found")
 
 def get_password_hash(username):
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("SELECT password FROM users WHERE username = ?", (username,))
     row = c.fetchone()
@@ -70,7 +72,7 @@ def get_password_hash(username):
     return None
 
 def add_to_watchlist(user_id, ticker):
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("INSERT INTO watchlist (user_id, ticker) VALUES (?, ?)", (user_id, ticker))
     conn.commit()
@@ -78,7 +80,7 @@ def add_to_watchlist(user_id, ticker):
     conn.close()
 
 def get_watchlist(user_id):
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("SELECT ticker FROM watchlist WHERE user_id = ?", (user_id,))
     rows = c.fetchall()
@@ -87,7 +89,7 @@ def get_watchlist(user_id):
     return [row[0] for row in rows]
 
 def remove_from_watchlist(user_id, ticker):
-    conn = sqlite3.connect("userprofile.db")
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("DELETE FROM watchlist WHERE user_id = ? AND ticker = ?", (user_id, ticker))
     conn.commit()
