@@ -12,11 +12,11 @@ finsight.secret_key = 'finsight_secret_key'
 def home():
     return render_template('home.html')
 
-# basic barebones health score
-def health_score(de_ratio, current_ratio):
-    if de_ratio < 1 and current_ratio > 1.5:
+# updated health score, including interest coverage ratio and current ratio, to assess the financial health of a stock
+def health_score(de_ratio, current_ratio, interest_coverage):
+    if de_ratio < 1 and current_ratio > 1.5 and interest_coverage > 3:
         return "LOW RISK"
-    elif de_ratio < 2 and current_ratio > 1:
+    elif de_ratio < 2 and current_ratio > 1 and interest_coverage > 2:
         return "MEDIUM RISK"
     else:
         return "HIGH RISK"
@@ -43,9 +43,19 @@ def user_stock_profile(user_id, ticker):
     week_low = stock_info.get('fiftyTwoWeekLow', 'N/A')
     debt_to_equity = stock_info.get('debtToEquity', 'N/A')
     current_ratio = stock_info.get('currentRatio', 'N/A')
+    ebit = stock_info.get('ebitda', 'N/A')
+    interest_expense = stock_info.get('interestExpense', 'N/A')
 
-    if debt_to_equity != 'N/A' and current_ratio != 'N/A':
-        risk_assessment = health_score(debt_to_equity, current_ratio)
+    # work out interest coverage ratio if we have both numbers
+    # skip it if interest expense is 0 since we cant divide by 0
+    if ebit != 'N/A' and interest_expense != 'N/A' and interest_expense != 0:
+        interest_coverage = ebit / abs(interest_expense)
+    else:
+        interest_coverage = 'N/A'
+
+    # only calculate a risk score if all 3 ratios are available
+    if debt_to_equity != 'N/A' and current_ratio != 'N/A' and interest_coverage != 'N/A':
+        risk_assessment = health_score(debt_to_equity, current_ratio, interest_coverage)
     else:
         risk_assessment = "N/A"
     
@@ -65,6 +75,16 @@ def screener():
     all_tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'JPM', 'JNJ', 'XOM', 'PFE', 'META', 'D05.SI', 'O39.SI', 'U11.SI', 'C6L.SI', 'Z74.SI', 'BN4.SI', 'A17U.SI', 'C38U.SI', 'S68U.SI', 'M44U.SI', 'G13U.SI']
     selected_sector = request.form.get('sector', '')
     selected_exchange = request.form.get('exchange', '')
+    selected_pe_min = request.form.get('pe_min', '')
+    selected_pe_max = request.form.get('pe_max', '')
+    selected_mcap_min = request.form.get('mcap_min', '')
+    selected_mcap_max = request.form.get('mcap_max', '')
+
+    # turn the form values into numbers, blank means no filter on that side
+    pe_min = float(selected_pe_min) if selected_pe_min else None
+    pe_max = float(selected_pe_max) if selected_pe_max else None
+    mcap_min = float(selected_mcap_min) if selected_mcap_min else None
+    mcap_max = float(selected_mcap_max) if selected_mcap_max else None
 
     results = []
     for ticker in all_tickers:
@@ -73,22 +93,51 @@ def screener():
         info_sector = info.get('sector', 'N/A')
         info_currentPrice = info.get('currentPrice', 'N/A')
         info_marketCap = info.get('marketCap', 'N/A')
+        info_pe = info.get('trailingPE', 'N/A')
 
         if ticker.endswith('.SI'):
             exchange = 'SGX'
         else:
             exchange = 'US'
 
-        if (selected_sector == '' or info_sector == selected_sector) and (selected_exchange == '' or exchange == selected_exchange):
+        # start assuming it passes, then rule it out if it fails any filter
+        include_stock = True
+
+        if selected_sector != '' and info_sector != selected_sector:
+            include_stock = False
+
+        if selected_exchange != '' and exchange != selected_exchange:
+            include_stock = False
+
+        # only check pe if a pe filter was actually set
+        if pe_min is not None or pe_max is not None:
+            if info_pe == 'N/A':
+                include_stock = False
+            elif pe_min is not None and info_pe < pe_min:
+                include_stock = False
+            elif pe_max is not None and info_pe > pe_max:
+                include_stock = False
+
+        # same for market cap
+        if mcap_min is not None or mcap_max is not None:
+            if info_marketCap == 'N/A':
+                include_stock = False
+            elif mcap_min is not None and info_marketCap < mcap_min:
+                include_stock = False
+            elif mcap_max is not None and info_marketCap > mcap_max:
+                include_stock = False
+
+        if include_stock:
             results.append({
                 'ticker': ticker,
                 'sector': info_sector,
                 'exchange': exchange,
                 'currentPrice': info_currentPrice,
-                'marketCap': info_marketCap
+                'marketCap': info_marketCap,
+                'pe': info_pe
             })
-    return render_template('screener.html', results=results, selected_sector=selected_sector, selected_exchange=selected_exchange)
 
+    return render_template('screener.html', results=results, selected_sector=selected_sector, selected_exchange=selected_exchange, selected_pe_min=selected_pe_min, selected_pe_max=selected_pe_max, selected_mcap_min=selected_mcap_min, selected_mcap_max=selected_mcap_max)
 
 @finsight.route('/register', methods=['GET', 'POST'])
 def register():
