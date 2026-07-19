@@ -1,0 +1,311 @@
+/* FinSight Styling */
+/* ledger-inspired: editorial serif headlines, monospace figures, paper surface */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #EEF0EA;
+    color: #1B231F;
+    font-family: 'IBM Plex Sans', Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* navbar */
+nav {
+    background-color: #F7F8F4;
+    padding: 16px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    border-bottom: 1.5px solid #1B231F;
+}
+
+nav .brand {
+    font-family: 'Libre Caslon Text', serif;
+    font-size: 21px;
+    font-weight: 400;
+    color: #1B231F;
+    letter-spacing: 0.3px;
+}
+
+nav a {
+    color: #24402F;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+nav a:hover {
+    color: #1B231F;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* main page content wrapper */
+.container {
+    max-width: 900px;
+    margin: 48px auto;
+    padding: 0 24px;
+}
+
+h1 {
+    font-family: 'Libre Caslon Text', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #1B231F;
+    margin-bottom: 6px;
+}
+
+h2 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6B7268;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    margin-top: 40px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #CBCDC1;
+}
+
+/* content panels — hairline top rule instead of rounded gradient card */
+.card {
+    background-color: #F7F8F4;
+    border-radius: 2px;
+    border-top: 3px solid #24402F;
+    padding: 24px 26px;
+    margin-bottom: 20px;
+}
+
+/* stock data rows — right-aligned tabular figures */
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 11px 0;
+    border-bottom: 1px solid #CBCDC1;
+    font-size: 15px;
+}
+
+.data-row:last-child {
+    border-bottom: none;
+}
+
+.data-label {
+    color: #6B7268;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.data-value {
+    color: #1B231F;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+/* risk assessment — text + left rule accent, no pill */
+.risk-badge {
+    display: inline-block;
+    padding: 2px 0 2px 10px;
+    border-left: 3px solid;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.risk-low { border-color: #3D7A56; color: #3D7A56; }
+.risk-medium { border-color: #96731F; color: #96731F; }
+.risk-high { border-color: #8B3A3A; color: #8B3A3A; }
+.risk-na { border-color: #CBCDC1; color: #6B7268; }
+
+/* buttons — bordered rectangle, not filled pill */
+button {
+    background-color: transparent;
+    color: #24402F;
+    border: 1.5px solid #24402F;
+    padding: 9px 20px;
+    border-radius: 2px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+button:hover {
+    background-color: #24402F;
+    color: #F7F8F4;
+}
+
+.btn-danger {
+    background-color: transparent;
+    color: #8B3A3A;
+    border: 1px solid #8B3A3A;
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    background-color: #8B3A3A;
+    color: #F7F8F4;
+}
+
+/* form inputs */
+.form-group {
+    margin-bottom: 18px;
+}
+
+label {
+    display: block;
+    color: #6B7268;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    background-color: #EEF0EA;
+    border: 1px solid #CBCDC1;
+    border-radius: 2px;
+    color: #1B231F;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 14px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: #24402F;
+}
+
+/* screener table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+th {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1.5px solid #1B231F;
+    color: #6B7268;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #CBCDC1;
+    color: #1B231F;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+}
+
+tr:hover td {
+    background-color: #F7F8F4;
+}
+
+/* filter dropdowns */
+select {
+    background-color: #EEF0EA;
+    border: 1px solid #CBCDC1;
+    border-radius: 2px;
+    color: #1B231F;
+    font-family: 'IBM Plex Sans', sans-serif;
+    padding: 8px 12px;
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+select:focus {
+    outline: none;
+    border-color: #24402F;
+}
+
+/* watchlist rows */
+.watchlist-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 1px solid #CBCDC1;
+}
+
+.watchlist-item a {
+    color: #1B231F;
+    text-decoration: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.watchlist-item a:hover {
+    color: #24402F;
+    text-decoration: underline;
+}
+
+/* error message */
+.error {
+    color: #8B3A3A;
+    background-color: transparent;
+    border-left: 3px solid #8B3A3A;
+    padding: 8px 14px;
+    margin-bottom: 16px;
+    font-size: 14px;
+}
+
+/* tagline text */
+.tagline {
+    color: #6B7268;
+    font-size: 14px;
+    margin-bottom: 32px;
+}
+
+/* period selector for chart */
+.period-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.period-selector a {
+    color: #6B7268;
+    text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    border: 1px solid #CBCDC1;
+}
+
+.period-selector a:hover {
+    color: #24402F;
+    border-color: #24402F;
+}
