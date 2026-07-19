@@ -309,3 +309,9 @@ select:focus {
     color: #24402F;
     border-color: #24402F;
 }
+
+/* small number inputs for screener range filters */
+.range-input {
+    width: 100px;
+    display: inline-block;
+}
