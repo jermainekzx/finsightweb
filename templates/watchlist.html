@@ -22,6 +22,10 @@
         {# loop through saved tickers #}
         {% endfor %}
     </ul>
+    <p>
+        <a href="/export_watchlist"><button type="button">Download Watchlist (.csv)</button></a>
+    </p>
+    
     <form method="post" action="/user/{{ user_id }}/watchlist/add">
         <input type="text" name="ticker" placeholder="Enter ticker symbol" required>
         <button type="submit">Add to Watchlist</button>

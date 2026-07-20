@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, send_file
 import yfinance as yf
 import bcrypt
+import sqlite3, csv
 
 from init_db import save_user, load_user, get_password_hash, add_to_watchlist, get_watchlist, remove_from_watchlist, get_user_id
 # setting up first attempt at the flask app
@@ -196,6 +197,29 @@ def logout():
     print("User logged out successfully.")
     return redirect(url_for('home'))
 
+@finsight.route('/export_watchlist')
+def export_watchlist():
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+
+    with open("watchlist.csv", mode="w", newline="") as f:
+        writer = csv.writer(f)
+    
+        writer.writerow(["Ticker"])
+        
+        conn = sqlite3.connect("userprofile.db")
+        cursor = conn.cursor()
+      
+        cursor.execute("SELECT ticker FROM watchlist WHERE user_id = ?", (user_id,))
+        for row in cursor:
+            print(row)
+            writer.writerow(row)
+            
+        conn.close()
+
+    print("CSV created!")
+    return send_file("watchlist.csv", as_attachment=True)
 
 # first trial to run
 if __name__ == '__main__':
