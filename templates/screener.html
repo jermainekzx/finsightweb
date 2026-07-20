@@ -59,5 +59,6 @@
         </tr>
         {% endfor %}
     </table>
+    {% elif request.method == 'POST' %}
+    <p>No stocks found matching the selected criteria.</p>
     {% endif %}
-{% endblock %}
