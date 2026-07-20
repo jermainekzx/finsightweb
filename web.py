@@ -183,25 +183,29 @@ def view_watchlist(user_id):
     final_watchlist = []
     
     for symbol in saved_stocks:
-        stock = yf.Ticker(symbol)
-        info = stock.info
-        
-        price = info.get('currentPrice', 'N/A')
-        de = info.get('debtToEquity', 'N/A')
-        cr = info.get('currentRatio', 'N/A')
-        ebit = info.get('ebitda', 'N/A')
-        interest = info.get('interestExpense', 'N/A')
-        
-        if ebit != 'N/A' and interest != 'N/A' and interest != 0:
-            ic = ebit / abs(interest)
-        else:
-            ic = 'N/A'
-            
-        if de != 'N/A' and cr != 'N/A' and ic != 'N/A':
-            normalized_de = de / 100.0 if isinstance(de, (int, float)) else de
-            assessment = health_score(normalized_de, cr, ic)
-        else:
-            assessment = "N/A"
+        price = 'N/A'
+        assessment = 'N/A'
+
+        try:
+            stock = yf.Ticker(symbol)
+            info = stock.info
+            if info and isinstance(info, dict):
+                price = info.get('currentPrice', 'N/A')
+                de = info.get('debtToEquity', 'N/A')
+                cr = info.get('currentRatio', 'N/A')
+                ebit = info.get('ebitda', 'N/A')
+                interest = info.get('interestExpense', 'N/A')
+
+                if ebit != 'N/A' and interest != 'N/A' and interest != 0:
+                    ic = ebit / abs(interest)
+                else:
+                    ic = 'N/A'
+
+                if de != 'N/A' and cr != 'N/A' and ic != 'N/A':
+                    normalized_de = de / 100.0 if isinstance(de, (int, float)) else de
+                    assessment = health_score(normalized_de, cr, ic)
+        except Exception as e:
+            print(f"Error fetching data for {symbol}: {e}")
             
         item = {
             'ticker': symbol,
@@ -235,23 +239,38 @@ def export_watchlist():
     user_id = session.get('user_id')
     if not user_id:
         return redirect(url_for('login'))
+    
+    saved_stocks = get_watchlist(user_id)
 
     with open("watchlist.csv", mode="w", newline="") as f:
         writer = csv.writer(f)
     
-        writer.writerow(["Ticker"])
+        writer.writerow(["Ticker", "Current Price", "Risk Assessment"])
         
-        conn = sqlite3.connect("userprofile.db")
-        cursor = conn.cursor()
-      
-        cursor.execute("SELECT ticker FROM watchlist WHERE user_id = ?", (user_id,))
-        for row in cursor:
-            print(row)
-            writer.writerow(row)
+        for symbol in saved_stocks:
+            stock = yf.Ticker(symbol)
+            info = stock.info
             
-        conn.close()
+            price = info.get('currentPrice', 'N/A')
+            de = info.get('debtToEquity', 'N/A')
+            cr = info.get('currentRatio', 'N/A')
+            ebit = info.get('ebitda', 'N/A')
+            interest = info.get('interestExpense', 'N/A')
+            
+            if ebit != 'N/A' and interest != 'N/A' and interest != 0:
+                ic = ebit / abs(interest)
+            else:
+                ic = 'N/A'
+                
+            if de != 'N/A' and cr != 'N/A' and ic != 'N/A':
+                normalized_de = de / 100.0 if isinstance(de, (int, float)) else de
+                assessment = health_score(normalized_de, cr, ic)
+            else:
+                assessment = "N/A"
+                
+            writer.writerow([symbol, price, assessment])
 
-    print("CSV created!")
+    print("CSV created with full metrics!")
     return send_file("watchlist.csv", as_attachment=True)
 
 # first trial to run
