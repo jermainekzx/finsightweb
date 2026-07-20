@@ -11,17 +11,32 @@
         <a href="/logout">Log Out</a>
     </nav>
     <h1>Your saved stocks</h1>
-    <ul>
-        {% for ticker in watchlist %}
-        <li>
-            <a href="/user/{{ user_id }}/stock/{{ ticker }}">{{ ticker }}</a>
-            <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ ticker }}" style="display:inline;">
-                <button type="submit">Remove</button>
-            </form>
-        </li>
-        {# loop through saved tickers #}
-        {% endfor %}
-    </ul>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Ticker Symbol</th>
+                <th>Current Price</th>
+                <th>Health Assessment</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in watchlist %}
+            <tr>
+                <td>
+                    <a href="/user/{{ user_id }}/stock/{{ stock.ticker }}">{{ stock.ticker }}</a>
+                </td>
+                <td>{{ stock.price }}</td>
+                <td>{{ stock.risk }}</td>
+                <td>
+                    <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ stock.ticker }}">
+                        <button type="submit">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     <p>
         <a href="/export_watchlist"><button type="button">Download Watchlist (.csv)</button></a>
     </p>

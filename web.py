@@ -178,8 +178,39 @@ def search():
 
 @finsight.route('/user/<int:user_id>/watchlist')
 def view_watchlist(user_id):
-    watchlist = get_watchlist(user_id)
-    return render_template('watchlist.html', user_id=user_id, watchlist=watchlist)
+    saved_stocks = get_watchlist(user_id)
+    
+    final_watchlist = []
+    
+    for symbol in saved_stocks:
+        stock = yf.Ticker(symbol)
+        info = stock.info
+        
+        price = info.get('currentPrice', 'N/A')
+        de = info.get('debtToEquity', 'N/A')
+        cr = info.get('currentRatio', 'N/A')
+        ebit = info.get('ebitda', 'N/A')
+        interest = info.get('interestExpense', 'N/A')
+        
+        if ebit != 'N/A' and interest != 'N/A' and interest != 0:
+            ic = ebit / abs(interest)
+        else:
+            ic = 'N/A'
+            
+        if de != 'N/A' and cr != 'N/A' and ic != 'N/A':
+            normalized_de = de / 100.0 if isinstance(de, (int, float)) else de
+            assessment = health_score(normalized_de, cr, ic)
+        else:
+            assessment = "N/A"
+            
+        item = {
+            'ticker': symbol,
+            'price': price,
+            'risk': assessment
+        }
+        final_watchlist.append(item)
+        
+    return render_template('watchlist.html', user_id=user_id, watchlist=final_watchlist)
 
 @finsight.route('/user/<int:user_id>/watchlist/add', methods=['POST'])
 def add_stock(user_id):
