@@ -11,7 +11,8 @@ finsight.secret_key = 'finsight_secret_key'
 # home page, to check if the app is working
 @finsight.route('/')
 def home():
-    return render_template('home.html')
+    all_tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'JPM', 'JNJ', 'XOM', 'PFE', 'META', 'D05.SI', 'O39.SI', 'U11.SI', 'C6L.SI', 'Z74.SI', 'BN4.SI', 'A17U.SI', 'C38U.SI', 'S68U.SI', 'M44U.SI', 'G13U.SI']
+    return render_template('home.html', tickers=all_tickers)
 
 # updated health score, including interest coverage ratio and current ratio, to assess the financial health of a stock
 def health_score(de_ratio, current_ratio, interest_coverage):
@@ -167,12 +168,13 @@ def login():
 
 @finsight.route('/search', methods=['GET', 'POST'])
 def search():
+    all_tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'JPM', 'JNJ', 'XOM', 'PFE', 'META', 'D05.SI', 'O39.SI', 'U11.SI', 'C6L.SI', 'Z74.SI', 'BN4.SI', 'A17U.SI', 'C38U.SI', 'S68U.SI', 'M44U.SI', 'G13U.SI']
     if request.method == 'POST':
         ticker = request.form.get('ticker', '').strip().upper()
         if ticker:
             active_user_id = session.get('user_id', 0) 
             return redirect(url_for('user_stock_profile', user_id=active_user_id, ticker=ticker))
-    return render_template('search.html')
+    return render_template('search.html', tickers=all_tickers)
 
 @finsight.route('/user/<int:user_id>/watchlist')
 def view_watchlist(user_id):

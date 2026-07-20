@@ -18,7 +18,14 @@
     
     <h2>Search for a Stock Symbol</h2>
     <form action="/search" method="POST">
-        <input type="text" name="ticker" placeholder="e.g. aapl, d05.si">
+        <input type="text" name="ticker" placeholder="e.g. aapl, d05.si" list="stock-options" autocomplete="off" required>
+        
+        <datalist id="stock-options">
+            {% for t in tickers %}
+            <option value="{{ t }}">
+            {% endfor %}
+        </datalist>
+        
         <button type="submit">Search</button>
     </form>
 </body>
