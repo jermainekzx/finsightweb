@@ -55,9 +55,18 @@ def user_stock_profile(user_id, ticker):
     else:
         interest_coverage = 'N/A'
 
-    # only calculate a risk score if all 3 ratios are available
-    if debt_to_equity != 'N/A' and current_ratio != 'N/A' and interest_coverage != 'N/A':
-        risk_assessment = health_score(debt_to_equity, current_ratio, interest_coverage)
+    # calculate risk score, interest coverage is optional
+    if debt_to_equity != 'N/A' and current_ratio != 'N/A':
+        if interest_coverage != 'N/A':
+            risk_assessment = health_score(debt_to_equity, current_ratio, interest_coverage)
+        else:
+            # fall back to two ratio check if interest coverage unavailable
+            if debt_to_equity < 1 and current_ratio > 1.5:
+                risk_assessment = "LOW RISK"
+            elif debt_to_equity < 2 and current_ratio > 1:
+                risk_assessment = "MEDIUM RISK"
+            else:
+                risk_assessment = "HIGH RISK"
     else:
         risk_assessment = "N/A"
     
@@ -201,9 +210,17 @@ def view_watchlist(user_id):
                 else:
                     ic = 'N/A'
 
-                if de != 'N/A' and cr != 'N/A' and ic != 'N/A':
+                if de != 'N/A' and cr != 'N/A':
                     normalized_de = de / 100.0 if isinstance(de, (int, float)) else de
-                    assessment = health_score(normalized_de, cr, ic)
+                    if ic != 'N/A':
+                        assessment = health_score(normalized_de, cr, ic)
+                    else:
+                        if normalized_de < 1 and cr > 1.5:
+                            assessment = "LOW RISK"
+                        elif normalized_de < 2 and cr > 1:
+                            assessment = "MEDIUM RISK"
+                        else:
+                            assessment = "HIGH RISK"
         except Exception as e:
             print(f"Error fetching data for {symbol}: {e}")
             
@@ -262,9 +279,17 @@ def export_watchlist():
             else:
                 ic = 'N/A'
                 
-            if de != 'N/A' and cr != 'N/A' and ic != 'N/A':
+            if de != 'N/A' and cr != 'N/A':
                 normalized_de = de / 100.0 if isinstance(de, (int, float)) else de
-                assessment = health_score(normalized_de, cr, ic)
+                if ic != 'N/A':
+                    assessment = health_score(normalized_de, cr, ic)
+                else:
+                    if normalized_de < 1 and cr > 1.5:
+                        assessment = "LOW RISK"
+                    elif normalized_de < 2 and cr > 1:
+                        assessment = "MEDIUM RISK"
+                    else:
+                        assessment = "HIGH RISK"
             else:
                 assessment = "N/A"
                 
