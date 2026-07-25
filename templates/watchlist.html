@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends 'base.html' %}
 
 {% block title %}My Watchlist | FinSight{% endblock %}
@@ -33,54 +32,3 @@
         </form>
     </div>
 {% endblock %}
-=======
-<!DOCTYPE html>
-<html>
-<head>
-    <title>FinSight - Watchlist</title>
-</head>
-<body>
-    <nav>
-        <a href="/">Home</a> | 
-        <a href="/">Search Stocks</a> | 
-        <a href="/screener">Screener</a> | 
-        <a href="/logout">Log Out</a>
-    </nav>
-    <h1>Your saved stocks</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Ticker Symbol</th>
-                <th>Current Price</th>
-                <th>Health Assessment</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for stock in watchlist %}
-            <tr>
-                <td>
-                    <a href="/user/{{ user_id }}/stock/{{ stock.ticker }}">{{ stock.ticker }}</a>
-                </td>
-                <td>{{ stock.price }}</td>
-                <td>{{ stock.risk }}</td>
-                <td>
-                    <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ stock.ticker }}">
-                        <button type="submit">Remove</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p>
-        <a href="/export_watchlist"><button type="button">Download Watchlist (.csv)</button></a>
-    </p>
-    
-    <form method="post" action="/user/{{ user_id }}/watchlist/add">
-        <input type="text" name="ticker" placeholder="Enter ticker symbol" required>
-        <button type="submit">Add to Watchlist</button>
-    </form>
-</body>
-</html>
->>>>>>> 0a0af955f380d52275c9ac0392d88c4168921b85
