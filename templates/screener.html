@@ -1,52 +1,65 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Finsight, stock finder</title>
-</head>
-<body>
-    <h1>Search for stocks</h1>
+{% extends 'base.html' %}
 
-    <form method="POST" action="/screener">
-    # filter stocks by sector and exchange
+{% block title %}Screener | FinSight{% endblock %}
 
-    # picking a sector
-    <select name="sector">
-            <option value="">All Sectors</option>
-            <option value="Technology">Technology</option>
-            <option value="Financial Services">Financial Services</option>
-            <option value="Healthcare">Healthcare</option>
-            <option value="Energy">Energy</option>
-        </select>
+{% block content %}
+    <h1>Stock Screener</h1>
+    <p class="tagline">Filter SGX and US stocks by sector and exchange</p>
 
-    # picking an exchange
-    <select name="exchange">
-            <option value="">All Exchanges</option>
-            <option value="SGX">SGX</option>
-            <option value="US">US</option>
-        </select>
+    <div class="card">
+        <form method="POST" action="/screener">
+            <!-- filter by sector and exchange -->
+            <select name="sector">
+                <option value="">All Sectors</option>
+                <option value="Technology">Technology</option>
+                <option value="Financial Services">Financial Services</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Energy">Energy</option>
+            </select>
+            <select name="exchange">
+                <option value="">All Exchanges</option>
+                <option value="SGX">SGX</option>
+                <option value="US">US</option>
+            </select>
 
-         <button type="submit">Search</button>
-    </form>
+            <div class="form-group">
+                <label for="pe_min">P/E Ratio</label>
+                <input type="number" step="any" name="pe_min" placeholder="Min" value="{{ selected_pe_min }}" class="range-input">
+                <input type="number" step="any" name="pe_max" placeholder="Max" value="{{ selected_pe_max }}" class="range-input">
+            </div>
 
+            <div class="form-group">
+                <label for="mcap_min">Market Cap</label>
+                <input type="number" step="any" name="mcap_min" placeholder="Min" value="{{ selected_mcap_min }}" class="range-input">
+                <input type="number" step="any" name="mcap_max" placeholder="Max" value="{{ selected_mcap_max }}" class="range-input">
+            </div>
+
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    {% if results %}
     <table>
-       <tr>
+        <tr>
             <th>Ticker</th>
             <th>Sector</th>
             <th>Exchange</th>
             <th>Price</th>
+            <th>P/E</th>
             <th>Mkt Cap</th>
         </tr>
         {% for stock in results %}
         <tr>
-            <td>{{ stock.ticker }}</td>
+            <td><a href="/user/{{ session.get('user_id', 0) }}/stock/{{ stock.ticker }}" style="color:#00c9a7">{{ stock.ticker }}</a></td>
             <td>{{ stock.sector }}</td>
             <td>{{ stock.exchange }}</td>
             <td>{{ stock.currentPrice }}</td>
+            <td>{{ stock.pe }}</td>
             <td>{{ stock.marketCap }}</td>
         </tr>
         {% endfor %}
     </table>
-    
-
-</body>
-</html>
+    {% elif request.method == 'POST' %}
+    <p>No stocks found matching the selected criteria.</p>
+    {% endif %}
+    {% endblock %}

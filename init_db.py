@@ -14,7 +14,8 @@ def create_db():
     c.execute(""" CREATE TABLE IF NOT EXISTS watchlist(
               id integer PRIMARY KEY AUTOINCREMENT,
               user_id integer NOT NULL,
-              ticker text NOT NULL
+              ticker text NOT NULL,
+              UNIQUE(user_id, ticker)
                )""")
     conn.commit()
     conn.close()
@@ -74,9 +75,12 @@ def get_password_hash(username):
 def add_to_watchlist(user_id, ticker):
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute("INSERT INTO watchlist (user_id, ticker) VALUES (?, ?)", (user_id, ticker))
-    conn.commit()
-    print(f"Added {ticker} to user {user_id}'s watchlist!")
+    try:
+        c.execute("INSERT INTO watchlist (user_id, ticker) VALUES (?, ?)", (user_id, ticker))
+        conn.commit()
+        print(f"Added {ticker} to user {user_id}'s watchlist!")
+    except sqlite3.IntegrityError:
+        print(f"{ticker} is already in user {user_id}'s watchlist!")
     conn.close()
 
 def get_watchlist(user_id):

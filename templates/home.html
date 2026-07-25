@@ -4,6 +4,7 @@
 
 {% block content %}
     <h1>Welcome to FinSight</h1>
+<<<<<<< HEAD
     <p class="tagline">Equity Research, Simplified — SGX and US stocks in one place</p>
 
     <div class="card">
@@ -17,3 +18,20 @@
         </form>
     </div>
 {% endblock %}
+=======
+    
+    <h2>Search for a Stock Symbol</h2>
+    <form action="/search" method="POST">
+        <input type="text" name="ticker" placeholder="e.g. aapl, d05.si" list="stock-options" autocomplete="off" required>
+        
+        <datalist id="stock-options">
+            {% for t in tickers %}
+            <option value="{{ t }}">
+            {% endfor %}
+        </datalist>
+        
+        <button type="submit">Search</button>
+    </form>
+</body>
+</html>
+>>>>>>> 0a0af955f380d52275c9ac0392d88c4168921b85
