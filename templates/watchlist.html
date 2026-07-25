@@ -8,14 +8,24 @@
 
     <div class="card">
         {% if watchlist %}
-            {% for ticker in watchlist %}
-            <div class="watchlist-item">
-                <a href="/user/{{ user_id }}/stock/{{ ticker }}">{{ ticker }}</a>
-                <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ ticker }}">
-                    <button type="submit" class="btn-danger">Remove</button>
-                </form>
-            </div>
-            {% endfor %}
+            {% for stock in watchlist %}
+<div class="watchlist-item">
+    <a href="/user/{{ user_id }}/stock/{{ stock.ticker }}">{{ stock.ticker }}</a>
+    <span class="data-value">${{ stock.price }}</span>
+    {% if stock.risk == 'LOW RISK' %}
+        <span class="risk-badge risk-low">LOW RISK</span>
+    {% elif stock.risk == 'MEDIUM RISK' %}
+        <span class="risk-badge risk-medium">MEDIUM RISK</span>
+    {% elif stock.risk == 'HIGH RISK' %}
+        <span class="risk-badge risk-high">HIGH RISK</span>
+    {% else %}
+        <span class="risk-badge risk-na">N/A</span>
+    {% endif %}
+    <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ stock.ticker }}">
+        <button type="submit" class="btn-danger">Remove</button>
+    </form>
+</div>
+{% endfor %}
         {% else %}
             <p style="color: #8a94a6;">No stocks saved yet. Search for a stock and add it to your watchlist.</p>
         {% endif %}

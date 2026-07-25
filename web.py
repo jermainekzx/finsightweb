@@ -156,7 +156,7 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
         save_user(username, password)
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
     return render_template('register.html')
 
 @finsight.route('/login', methods=['GET', 'POST'])
