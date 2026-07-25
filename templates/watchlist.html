@@ -8,6 +8,12 @@
 
     <div class="card">
         {% if watchlist %}
+        <div class="watchlist-item">
+        <span><strong>Ticker</strong></span>
+        <span><strong>Price</strong></span>
+    <span><strong>Risk</strong></span>
+    <span></span>
+    </div>
             {% for stock in watchlist %}
 <div class="watchlist-item">
     <a href="/user/{{ user_id }}/stock/{{ stock.ticker }}">{{ stock.ticker }}</a>
@@ -30,7 +36,7 @@
             <p style="color: #8a94a6;">No stocks saved yet. Search for a stock and add it to your watchlist.</p>
         {% endif %}
     </div>
-
+    <a href="/export_watchlist"><button type="button">Download Watchlist (.csv)</button></a>
     <h2>Add a Stock</h2>
     <div class="card">
         <form method="post" action="/user/{{ user_id }}/watchlist/add">
