@@ -1,46 +1,69 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ ticker }} Stock Information</title>
-</head>
-<body>
-    <nav>
-        <a href="/">Home</a> | 
-        <a href="/">Search Stocks</a> | 
-        <a href="/user/{{ user_id }}/watchlist">My Watchlist</a> | 
-        <a href="/screener">Screener</a> | 
-        <a href="/logout">Log Out</a>
-    </nav>
-    Logged in as: <strong>{{ user_name }}</strong>
-    <hr>
+{% extends 'base.html' %}
+
+{% block title %}{{ ticker }} | FinSight{% endblock %}
+
+{% block content %}
     <h1>{{ ticker }} Stock Information</h1>
-    <p>Current Price: ${{ price }}</p>
-    <p>Price to Earnings Ratio: {{ pe }}</p>
-    <p>Market Cap: {{ market_cap }}</p>
-    <p>52 Week High: {{ week_high }}</p>
-    <p>52 Week Low: {{ week_low }}</p>
-    <p>Risk Assessment: {{ risk_assessment }}</p>
+    <p class="tagline">Logged in as {{ user_name }}</p>
+
+    <div class="card">
+        <div class="data-row">
+            <span class="data-label">Current Price</span>
+            <span class="data-value">${{ price }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">Price to Earnings Ratio</span>
+            <span class="data-value">{{ pe }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">Market Cap</span>
+            <span class="data-value">{{ market_cap }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">52 Week High</span>
+            <span class="data-value">{{ week_high }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">52 Week Low</span>
+            <span class="data-value">{{ week_low }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">Risk Assessment</span>
+            <span class="data-value">
+                {% if risk_assessment == 'LOW RISK' %}
+                    <span class="risk-badge risk-low">LOW RISK</span>
+                {% elif risk_assessment == 'MEDIUM RISK' %}
+                    <span class="risk-badge risk-medium">MEDIUM RISK</span>
+                {% elif risk_assessment == 'HIGH RISK' %}
+                    <span class="risk-badge risk-high">HIGH RISK</span>
+                {% else %}
+                    <span class="risk-badge risk-na">N/A</span>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
     <form method="POST" action="/user/{{ user_id }}/watchlist/add">
         <input type="hidden" name="ticker" value="{{ ticker }}">
-        <button type="submit">Add to Watchlist</button>
+        <button type="submit">+ Add to Watchlist</button>
     </form>
 
-    <h2>Historical Price Chart ({{ chosen_period }})</h2>
-    <div>
-        <strong>Change Range:</strong>
-        <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=1mo">1 Month</a> | 
-        <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=3mo">3 Months</a> | 
+    <h2>Historical Price Chart</h2>
+    <div class="period-selector">
+        <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=1mo">1 Month</a>
+        <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=3mo">3 Months</a>
         <a href="/user/{{ user_id }}/stock/{{ ticker }}?period=1y">1 Year</a>
     </div>
 
-    <canvas id="priceChart" width="750" height="350"></canvas>
+    <div class="card">
+        <canvas id="priceChart" width="750" height="350"></canvas>
+    </div>
 
-    <!-- chart.js renders the closing price data from flask as a line graph -->
+    <!-- chart.js renders closing price data from flask as a line graph -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const dates = {{ chart_dates | tojson }};
         const prices = {{ chart_prices | tojson }};
-
         const ctx = document.getElementById('priceChart').getContext('2d');
         new Chart(ctx, {
             type: 'line',
@@ -55,5 +78,4 @@
             }
         });
     </script>
-</body>
-</html>
+{% endblock %}

@@ -1,23 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register | FinSight</title>
-</head>
-<body>
-    <h2>Create your FinSight Account</h2>
-    
-    <form method="POST" action="/register">
-        <div>
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-        </div>
-        <br>
-        <div>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        <br>
-        <button type="submit">Sign Up</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Register | FinSight{% endblock %}
+
+{% block content %}
+    <h1>Create Account</h1>
+    <p class="tagline">Join FinSight to save your watchlist</p>
+
+    <div class="card">
+        <form method="POST" action="/register">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+    </div>
+{% endblock %}

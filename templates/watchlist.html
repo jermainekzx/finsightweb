@@ -1,30 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>FinSight - Watchlist</title>
-</head>
-<body>
-    <nav>
-        <a href="/">Home</a> | 
-        <a href="/">Search Stocks</a> | 
-        <a href="/screener">Screener</a> | 
-        <a href="/logout">Log Out</a>
-    </nav>
-    <h1>Your saved stocks</h1>
-    <ul>
-        {% for ticker in watchlist %}
-        <li>
-            <a href="/user/{{ user_id }}/stock/{{ ticker }}">{{ ticker }}</a>
-            <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ ticker }}" style="display:inline;">
-                <button type="submit">Remove</button>
-            </form>
-        </li>
-        {# loop through saved tickers #}
-        {% endfor %}
-    </ul>
-    <form method="post" action="/user/{{ user_id }}/watchlist/add">
-        <input type="text" name="ticker" placeholder="Enter ticker symbol" required>
-        <button type="submit">Add to Watchlist</button>
-    </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}My Watchlist | FinSight{% endblock %}
+
+{% block content %}
+    <h1>Your Saved Stocks</h1>
+    <p class="tagline">Stocks you are tracking</p>
+
+    <div class="card">
+        {% if watchlist %}
+            {% for ticker in watchlist %}
+            <div class="watchlist-item">
+                <a href="/user/{{ user_id }}/stock/{{ ticker }}">{{ ticker }}</a>
+                <form method="post" action="/user/{{ user_id }}/watchlist/remove/{{ ticker }}">
+                    <button type="submit" class="btn-danger">Remove</button>
+                </form>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="color: #8a94a6;">No stocks saved yet. Search for a stock and add it to your watchlist.</p>
+        {% endif %}
+    </div>
+
+    <h2>Add a Stock</h2>
+    <div class="card">
+        <form method="post" action="/user/{{ user_id }}/watchlist/add">
+            <div class="form-group">
+                <label for="ticker">Ticker Symbol</label>
+                <input type="text" name="ticker" id="ticker" placeholder="e.g. AAPL, D05.SI" required>
+            </div>
+            <button type="submit">Add to Watchlist</button>
+        </form>
+    </div>
+{% endblock %}
