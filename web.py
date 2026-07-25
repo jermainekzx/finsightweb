@@ -43,7 +43,8 @@ def user_stock_profile(user_id, ticker):
     market_cap = stock_info.get('marketCap', 'N/A')
     week_high = stock_info.get('fiftyTwoWeekHigh', 'N/A')
     week_low = stock_info.get('fiftyTwoWeekLow', 'N/A')
-    debt_to_equity = stock_info.get('debtToEquity', 'N/A')
+    debt_to_equity_raw = stock_info.get('debtToEquity', 'N/A')
+    debt_to_equity = debt_to_equity_raw / 100.0 if isinstance(debt_to_equity_raw, (int, float)) else debt_to_equity_raw
     current_ratio = stock_info.get('currentRatio', 'N/A')
     ebit = stock_info.get('ebitda', 'N/A')
     interest_expense = stock_info.get('interestExpense', 'N/A')
