@@ -8,23 +8,23 @@
 
     <div class="card">
         <div class="data-row">
-            <span class="data-label">Current Price</span>
+            <span class="data-label" title="How much the stock is trading for right now">Current Price</span>
             <span class="data-value">${{ price }}</span>
         </div>
         <div class="data-row">
-            <span class="data-label">Price to Earnings Ratio</span>
+            <span class="data-label" title="Share price divided by earnings per share. Higher generally means investors expect more future growth">Price to Earnings Ratio</span>
             <span class="data-value">{{ pe }}</span>
         </div>
         <div class="data-row">
-            <span class="data-label">Market Cap</span>
+            <span class="data-label" title="Total value of all the company's outstanding shares">Market Cap</span>
             <span class="data-value">{{ market_cap }}</span>
         </div>
         <div class="data-row">
-            <span class="data-label">52 Week High</span>
+            <span class="data-label" title="The highest price the stock has traded at over the past year">52 Week High</span>
             <span class="data-value">{{ week_high }}</span>
         </div>
         <div class="data-row">
-            <span class="data-label">52 Week Low</span>
+            <span class="data-label" title="The lowest price the stock has traded at over the past year">52 Week Low</span>
             <span class="data-value">{{ week_low }}</span>
         </div>
         <div class="data-row">
@@ -41,6 +41,7 @@
                 {% endif %}
             </span>
         </div>
+        <p class="disclaimer">This reflects balance sheet health based on debt, liquidity, and interest coverage. It is not a buy or sell recommendation.</p>
     </div>
 
     <form method="POST" action="/user/{{ user_id }}/watchlist/add">

@@ -128,6 +128,27 @@ h2 {
 
 .risk-low { border-color: #3D7A56; color: #3D7A56; }
 .risk-medium { border-color: #96731F; color: #96731F; }
+.flash-message {
+    background-color: #E4EFE8;
+    border: 1px solid #3D7A56;
+    color: #3D7A56;
+    padding: 10px 14px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.disclaimer {
+    color: #8a94a6;
+    font-size: 13px;
+    padding: 8px 20px 16px;
+}
+
+.hint {
+    color: #8a94a6;
+    font-size: 13px;
+    margin-top: 6px;
+}
 .risk-high { border-color: #8B3A3A; color: #8B3A3A; }
 .risk-na { border-color: #CBCDC1; color: #6B7268; }
 

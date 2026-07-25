@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for, send_file
+from flask import Flask, render_template, request, redirect, session, url_for, send_file, flash
 import yfinance as yf
 import bcrypt
 import sqlite3, csv
@@ -234,10 +234,12 @@ def view_watchlist(user_id):
     return render_template('watchlist.html', user_id=user_id, watchlist=final_watchlist)
 
 @finsight.route('/user/<int:user_id>/watchlist/add', methods=['POST'])
+@finsight.route('/user/<int:user_id>/watchlist/add', methods=['POST'])
 def add_stock(user_id):
     ticker = request.form.get('ticker', '').strip().upper()
     if ticker:
         add_to_watchlist(user_id, ticker)
+        flash(f"Added {ticker} to your watchlist!")
     return redirect(url_for('view_watchlist', user_id=user_id))
 
 @finsight.route('/user/<int:user_id>/watchlist/remove/<ticker>', methods=['POST'])

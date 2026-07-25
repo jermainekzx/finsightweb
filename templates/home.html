@@ -12,6 +12,7 @@
             <div class="form-group">
                 <label for="ticker">Enter a ticker symbol</label>
                 <input type="text" name="ticker" id="ticker" placeholder="e.g. AAPL, D05.SI" list="stock-options" autocomplete="off">
+                <p class="hint">Looking for an SGX stock? Add .SI after the code, e.g. D05.SI for DBS.</p>
                 <datalist id="stock-options">
                     {% for t in tickers %}
                     <option value="{{ t }}">
