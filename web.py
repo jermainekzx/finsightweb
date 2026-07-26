@@ -158,7 +158,9 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        save_user(username, password)
+        success = save_user(username, password)
+        if not success:
+            return render_template('register.html', error="That username is already taken. Please choose another one.")
         return redirect(url_for('login'))
     return render_template('register.html')
 
