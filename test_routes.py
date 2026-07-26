@@ -52,8 +52,10 @@ class TestRoutes(unittest.TestCase):
 
     def test_remove_from_watchlist(self):
         # using MSFT here instead of AAPL, since AAPL appears in the placeholder text on this page
-        self.client.post('/user/0/watchlist/add', data={'ticker': 'MSFT'})
-        self.client.post('/user/0/watchlist/remove/MSFT')
+        # follow_redirects=True so each step's flash message actually renders and clears here,
+        # rather than lingering into the final assertion below
+        self.client.post('/user/0/watchlist/add', data={'ticker': 'MSFT'}, follow_redirects=True)
+        self.client.post('/user/0/watchlist/remove/MSFT', follow_redirects=True)
         response = self.client.get('/user/0/watchlist')
         self.assertNotIn(b'MSFT', response.data)
 
