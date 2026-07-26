@@ -7,6 +7,9 @@
     <p class="tagline">Join FinSight to save your watchlist</p>
 
     <div class="card">
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
         <form method="POST" action="/register">
             <div class="form-group">
                 <label for="username">Username</label>

@@ -28,14 +28,16 @@ def save_user(new_username, new_password):
 
     if existing_user is not None:
         print("That username is already taken! Please choose another one")
+        conn.close()
+        return False
     else:
         hashed_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt(rounds=12))
         stored_hashed_string = hashed_password.decode()
         c.execute("""INSERT INTO users (username, password) VALUES (?, ?)""", (new_username, stored_hashed_string))
         conn.commit()
         print("Successfully saved new user data!")
-
-    conn.close()
+        conn.close()
+        return True
 
 def get_user_id(username):
     conn = sqlite3.connect(DB_NAME)
