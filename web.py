@@ -3,10 +3,12 @@ import yfinance as yf
 import bcrypt
 import sqlite3, csv
 
-from init_db import save_user, load_user, get_password_hash, add_to_watchlist, get_watchlist, remove_from_watchlist, get_user_id
+from init_db import save_user, load_user, get_password_hash, add_to_watchlist, get_watchlist, remove_from_watchlist, get_user_id, create_db
 # setting up first attempt at the flask app
 finsight = Flask(__name__)
 finsight.secret_key = 'finsight_secret_key' 
+
+create_db()  # Ensure the database is created when the app starts
 
 # home page, to check if the app is working
 @finsight.route('/')
